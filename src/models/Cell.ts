@@ -1,6 +1,7 @@
 import {Colors} from "./Colors";
-import {Figure} from "./figures/Figure";
+import {Figure, FigureNames} from "./figures/Figure";
 import {Board} from "./Board";
+import {King} from "./figures/King";
 
 export class Cell {
   readonly x: number;
@@ -8,8 +9,8 @@ export class Cell {
   readonly color: Colors;
   figure: Figure | null;
   board: Board;
-  available: boolean; // Можешь ли переместиться
-  id: number; // Для реакт ключей
+  available: boolean; // множно ли переместиться
+  id: number; // ключи
 
   constructor(board: Board, x: number, y: number, color: Colors, figure: Figure | null) {
     this.x = x;
@@ -93,7 +94,6 @@ export class Cell {
     if(this.figure && this.figure?.canMove(target)) {
       this.figure.moveFigure(target)
       if (target.figure) {
-        console.log(target.figure)
         this.addLostFigure(target.figure);
       }
       target.setFigure(this.figure);

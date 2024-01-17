@@ -11,8 +11,11 @@ export class King extends Figure {
     this.name = FigureNames.KING;
   }
   canMove(target: Cell): boolean {
-    if(!super.canMove(target))
-      return false;
-    return true
+    if (!super.canMove(target)) return false;
+
+    const dx = Math.abs(target.x - this.cell.x);
+    const dy = Math.abs(target.y - this.cell.y);
+
+    return dx <= 1 && dy <= 1;
   }
 }

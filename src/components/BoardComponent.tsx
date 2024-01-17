@@ -43,8 +43,8 @@ const BoardComponent: FC<BoardProps> = ({board, setBoard, currentPlayer, swapPla
 
   return (
     <div>
-      <h3>Текущий игрок {currentPlayer?.color}</h3>
-      <div className="board">
+      <h3 className={`text-${currentPlayer?.color}`}>Ходит {currentPlayer?.color === 'black' ? 'Черный' : 'Белый'} игрок</h3>
+      <div className="board d-flex flex-wrap">
         {board.cells.map((row, index) =>
           <React.Fragment key={index}>
             {row.map(cell =>

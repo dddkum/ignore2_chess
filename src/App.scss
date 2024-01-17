@@ -1,54 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;300;500;600;700&display=swap');
+
+$cell-size: 100px;
+$cell-border: 0.5px solid black;
+$available-and-selected-color: darksalmon;
+
 * {
+    font-family: 'Roboto Slab', serif;
     margin: 0;
     padding: 0;
 }
 
-.app {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.board {
+    width: calc(#{$cell-size} * 8);
+    height: calc(#{$cell-size} * 8);
 }
 
-.board {
-    width: calc(64px * 8);
-    height: calc(64px * 8);
-    display: flex;
-    flex-wrap: wrap;
-}
 .cell {
-    width: 64px;
-    height: 64px;
+    width: $cell-size;
+    height: $cell-size;
     display: flex;
     justify-content: center;
     align-items: center;
+
+    img {
+        width: 48px;
+        height: 48px;
+        position: relative;
+        cursor: pointer;
+    }
 }
-.cell img {
-    width: 48px;
-    height: 48px;
-    position: relative;
-}
+
 .black {
-    background-color: deepskyblue;
+    background-color: lightblue;
+    border: $cell-border;
 }
+
 .white {
-    background-color: #eed4ac;
+    background-color: rosybrown;
+    border: $cell-border;
 }
 
 .selected {
-    background-color: brown;
+    background-color: $available-and-selected-color;
 }
+
 .available {
     height: 12px;
     width: 12px;
     border-radius: 50%;
-    background-color: #22c022;
+    background-color: $available-and-selected-color;
+    border: .2px solid orange;
+    cursor: pointer;
 }
 
 .lost {
-    height: calc(50vh - 60px);
+    height: 45vh;
     padding: 30px;
-    margin-left: 50px;
-    background-color: lightgray;
+    background-color: azure;
+    border: 1px solid black;
+}
+
+.final-table {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.final-table th, .final-table td {
+    border: 1px solid black;
+    padding: 10px;
 }

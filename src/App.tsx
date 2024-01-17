@@ -1,58 +1,87 @@
 import React, {useEffect, useState} from 'react';
-import "./App.css";
+import "./App.scss";
 import BoardComponent from "./components/BoardComponent";
+import LostFigures from "./components/LostFigures";
+import Timer from "./components/Timer";
+import FinalTable from "./components/FinalTable";
 import {Board} from "./models/Board";
 import {Player} from "./models/Player";
 import {Colors} from "./models/Colors";
-import LostFigures from "./components/LostFigures";
-import Timer from "./components/Timer";
 
 const App = () => {
-  const [board, setBoard] = useState(new Board())
-  const [whitePlayer, setWhitePlayer] = useState(new Player(Colors.WHITE))
-  const [blackPlayer, setBlackPlayer] = useState(new Player(Colors.BLACK))
-  const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
+    const [board, setBoard] = useState(new Board())
+    const [whitePlayer, setWhitePlayer] = useState(new Player(Colors.WHITE))
+    const [blackPlayer, setBlackPlayer] = useState(new Player(Colors.BLACK))
+    const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
+    const [isGameEnded, setIsGameEnded] = useState(false)
+    const [totalGames, setTotalGames] = useState(0)
 
-  useEffect(() => {
-    restart()
-    setCurrentPlayer(whitePlayer);
-  }, [])
+    useEffect(() => {
+        restart()
+        setCurrentPlayer(whitePlayer);
 
-  function restart() {
-    const newBoard = new Board();
-    newBoard.initCells()
-    newBoard.addFigures()
-    setBoard(newBoard)
-  }
+        const storedTotalGames = localStorage.getItem('totalGames');
+        if (storedTotalGames) {
+            setTotalGames(Number(storedTotalGames));
+        }
+    }, [])
 
-  function swapPlayer() {
-    setCurrentPlayer(currentPlayer?.color === Colors.WHITE ? blackPlayer : whitePlayer)
-  }
+    useEffect(() => {
+        localStorage.setItem('totalGames', String(totalGames));
+    }, [totalGames]);
 
-  return (
-    <div className="app">
-      <Timer
-        restart={restart}
-        currentPlayer={currentPlayer}
-      />
-      <BoardComponent
-        board={board}
-        setBoard={setBoard}
-        currentPlayer={currentPlayer}
-        swapPlayer={swapPlayer}
-      />
-      <div>
-        <LostFigures
-          title="Черные фигуры"
-          figures={board.lostBlackFigures}
-        />
-        <LostFigures
-          title="Белые фигуры"
-          figures={board.lostWhiteFigures}
-        />
-      </div>
-    </div>
-  );
+    useEffect(() => {
+        if (isGameEnded) {
+            setTotalGames(prev => prev + 1);
+        }
+    }, [isGameEnded]);
+
+
+    function restart() {
+        const newBoard = new Board();
+        newBoard.initCells()
+        newBoard.addFigures()
+        setBoard(newBoard)
+    }
+
+    function swapPlayer() {
+        setCurrentPlayer(currentPlayer?.color === Colors.WHITE ? blackPlayer : whitePlayer)
+    }
+
+    return (
+        <div className="app bg-danger-subtle vw-100 vh-100 d-flex align-items-center justify-content-around">
+            {isGameEnded ?
+                <FinalTable
+                    currentPlayer={currentPlayer}
+                    totalGames={totalGames}
+                />
+                :
+                <>
+                    <Timer
+                        restart={restart}
+                        currentPlayer={currentPlayer}
+                        setIsGameEnded={setIsGameEnded}
+                    />
+                </>
+            }
+            <BoardComponent
+                board={board}
+                setBoard={setBoard}
+                currentPlayer={currentPlayer}
+                swapPlayer={swapPlayer}
+            />
+            <div>
+                <LostFigures
+                    title="Черные фигуры"
+                    figures={board.lostBlackFigures}
+                />
+                <LostFigures
+                    title="Белые фигуры"
+                    figures={board.lostWhiteFigures}
+                />
+            </div>
+        </div>
+    );
 };
 
 export default App;
